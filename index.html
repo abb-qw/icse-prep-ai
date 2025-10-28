@@ -1,0 +1,72 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-to-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ICSE Prep AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  <script type="importmap">
+{
+  "imports": {
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.26.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/"
+  }
+}
+</script>
+<style>
+/* Mind Map Styling */
+.mindmap ul {
+    position: relative;
+    list-style: none;
+    padding-left: 30px;
+}
+.mindmap ul li {
+    position: relative;
+    padding: 8px 0 8px 20px;
+    border-left: 2px solid #60a5fa; /* blue-400 */
+}
+.mindmap ul li::before {
+    content: "";
+    position: absolute;
+    top: 18px;
+    left: 0;
+    width: 15px;
+    height: 2px;
+    background-color: #60a5fa;
+}
+.mindmap > ul > li {
+    border-left: none; /* No vertical line for the root */
+    padding-left: 0;
+}
+.mindmap > ul > li::before {
+    display: none; /* No horizontal line for the root */
+}
+.mindmap ul li span {
+    display: inline-block;
+    padding: 6px 12px;
+    background-color: #e0f2fe; /* sky-100 */
+    color: #0c4a6e; /* sky-900 */
+    border-radius: 8px;
+    font-weight: 500;
+}
+.dark .mindmap ul li {
+    border-left-color: #3b82f6; /* blue-500 */
+}
+.dark .mindmap ul li::before {
+    background-color: #3b82f6;
+}
+.dark .mindmap ul li span {
+    background-color: #1e3a8a; /* blue-900 */
+    color: #dbeafe; /* blue-100 */
+}
+</style>
+</head>
+  <body class="bg-gray-100 dark:bg-gray-900">
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>

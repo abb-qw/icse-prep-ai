@@ -1,0 +1,5 @@
+{
+  "name": "ICSE Prep AI",
+  "description": "An AI-powered learning platform for students in Classes 1-10. Features include topic summaries, practice quizzes, mind maps, resource finding, and full ICSE-pattern exam paper generation for Classes 9 and 10.",
+  "requestFramePermissions": []
+}
