@@ -1,5 +1,6 @@
+
 import React, { useState, useEffect } from 'react';
-import { SavedContent } from '../types';
+import { SavedContent, LearningResources } from '../types';
 import { getSavedContent, deleteContent as deleteContentFromDB } from '../services/dbService';
 import PracticeScreen from './PracticeScreen';
 
@@ -16,7 +17,7 @@ const OfflineScreen: React.FC<OfflineScreenProps> = ({ onBack }) => {
         setIsLoading(true);
         try {
             const items = await getSavedContent();
-            setSavedItems(items.sort((a, b) => b.savedAt.getTime() - a.savedAt.getTime()));
+            setSavedItems(items.sort((a, b) => new Date(b.savedAt).getTime() - new Date(a.savedAt).getTime()));
         } catch (error) {
             console.error("Failed to load offline content:", error);
         } finally {
@@ -55,6 +56,45 @@ const OfflineScreen: React.FC<OfflineScreenProps> = ({ onBack }) => {
         return names[contentType] || "Content";
     };
 
+    const renderSelectedItemContent = () => {
+        if (!selectedItem) return null;
+
+        switch (selectedItem.contentType) {
+            case 'practice':
+                return <PracticeScreen questions={selectedItem.content as any[]} />;
+
+            case 'resources':
+                const resources = selectedItem.content as LearningResources;
+                return (
+                    <div>
+                        <h3 className="text-xl font-semibold text-gray-700 dark:text-gray-200 mb-3">Important Questions</h3>
+                        <ul className="list-disc list-inside space-y-2 mb-6">
+                            {resources.importantQuestions.map((q, i) => <li key={i} className="text-gray-600 dark:text-gray-300">{q}</li>)}
+                        </ul>
+                        <h3 className="text-xl font-semibold text-gray-700 dark:text-gray-200 mb-3">YouTube Video Suggestions</h3>
+                        <div className="space-y-3">
+                            {resources.youtubeSuggestions.map((s, i) => (
+                                <a key={i} href={`https://www.youtube.com/results?search_query=${encodeURIComponent(s.query)}`} target="_blank" rel="noopener noreferrer" className="block p-3 bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600">
+                                    <p className="font-semibold text-blue-600 dark:text-blue-400">{s.title}</p>
+                                    <p className="text-sm text-gray-500 dark:text-gray-400">Search for: "{s.query}"</p>
+                                </a>
+                            ))}
+                        </div>
+                    </div>
+                );
+
+            case 'mindmap':
+                return <div className="mindmap" dangerouslySetInnerHTML={{ __html: selectedItem.content as string }}></div>;
+
+            case 'summary':
+            case 'paper':
+                return <div className="prose prose-blue dark:prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: selectedItem.content as string }}></div>;
+
+            default:
+                return <p>Cannot display this content type.</p>;
+        }
+    };
+
     if (selectedItem) {
         const title = selectedItem.contentType === 'paper' ? 
             `Class ${selectedItem.className} ${selectedItem.subjectName} - Model Paper` :
@@ -68,11 +108,7 @@ const OfflineScreen: React.FC<OfflineScreenProps> = ({ onBack }) => {
                 </button>
                 <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 md:p-8">
                      <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-4">{title}</h2>
-                     {selectedItem.contentType === 'practice' ? (
-                        <PracticeScreen questions={selectedItem.content as any[]} />
-                     ) : (
-                        <div className="prose prose-blue dark:prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: selectedItem.content as string }}></div>
-                     )}
+                     {renderSelectedItemContent()}
                 </div>
             </div>
         );
